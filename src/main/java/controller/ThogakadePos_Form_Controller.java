@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 
 public class ThogakadePos_Form_Controller implements Initializable {
 
-    public static ArrayList<Customer> customerArrayList= new ArrayList<>();
+    public static ArrayList<Customer> customerArrayList = new ArrayList<>();
 
     @FXML
     private JFXTextField txtaddress;
@@ -42,41 +42,8 @@ public class ThogakadePos_Form_Controller implements Initializable {
         if (customerArrayList.isEmpty() || checkid()){
             addcustomer();
         }else{
-            txtid.setText(null);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ID");
-            alert.setContentText("The id you entered exists.Do you want to change it?");
-            alert.show();
+            idexistsmassage();
         }
-    }
-
-    private boolean checkid() {
-        for (int i = 0; i < customerArrayList.size(); i++){
-            if (customerArrayList.get(i).getId().equals(txtid.getText()))return false;
-        }
-        return true;
-    }
-
-    private void addcustomer() {
-        customerArrayList.add(new Customer(
-                txtid.getText(),
-                cmbtitle.getValue(),
-                txtname.getText(),
-                txtaddress.getText(),
-                txtcontact.getText(),
-                datedob.getValue()
-        ));
-        clearvalues();
-        customerArrayList.forEach(System.out::println);
-    }
-
-    private void clearvalues() {
-        txtid.setText(null);
-        cmbtitle.setValue(null);
-        txtname.setText(null);
-        txtaddress.setText(null);
-        txtcontact.setText(null);
-        datedob.setValue(null);
     }
 
     @FXML
@@ -87,18 +54,6 @@ public class ThogakadePos_Form_Controller implements Initializable {
     @FXML
     void btnSearchOnAction(ActionEvent event) {
         if (!checkid()) searchcustomer();
-    }
-
-    private void searchcustomer() {
-        customerArrayList.forEach(customer -> {
-            if (customer.getId().equals(txtid.getText())){
-                cmbtitle.setValue(customer.getTitle());
-                txtname.setText(customer.getName());
-                txtaddress.setText(customer.getAddress());
-                txtcontact.setText(customer.getContact());
-                datedob.setValue(customer.getDob());
-            }
-        });
     }
 
     @FXML
@@ -113,6 +68,15 @@ public class ThogakadePos_Form_Controller implements Initializable {
         ));
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<String> titles = FXCollections.observableArrayList();
+        titles.add("MR.");
+        titles.add("Miss");
+
+        cmbtitle.setItems(titles);
+    }
+
     private int searchindex() {
         int i;
         for (i = 0; i < customerArrayList.size(); i++){
@@ -121,12 +85,53 @@ public class ThogakadePos_Form_Controller implements Initializable {
         return i;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<String> titles = FXCollections.observableArrayList();
-        titles.add("MR.");
-        titles.add("Miss");
+    private void searchcustomer() {
+        customerArrayList.forEach(customer -> {
+            if (customer.getId().equals(txtid.getText())){
+                cmbtitle.setValue(customer.getTitle());
+                txtname.setText(customer.getName());
+                txtaddress.setText(customer.getAddress());
+                txtcontact.setText(customer.getContact());
+                datedob.setValue(customer.getDob());
+            }
+        });
+    }
 
-        cmbtitle.setItems(titles);
+    private void clearvalues() {
+        txtid.setText(null);
+        cmbtitle.setValue(null);
+        txtname.setText(null);
+        txtaddress.setText(null);
+        txtcontact.setText(null);
+        datedob.setValue(null);
+    }
+
+    private boolean checkid() {
+        for (Customer customer : customerArrayList) {
+            if (customer.getId().equals(txtid.getText())) return false;
+        }
+        return true;
+    }
+
+    private void addcustomer() {
+        customerArrayList.add(new Customer(
+                txtid.getText(),
+                cmbtitle.getValue(),
+                txtname.getText(),
+                txtaddress.getText(),
+                txtcontact.getText(),
+                datedob.getValue()
+        ));
+        clearvalues();
+        System.out.println("------------------------------------------------------------------------");
+        customerArrayList.forEach(System.out::println);
+    }
+
+    private void idexistsmassage() {
+        txtid.setText(null);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ID");
+        alert.setContentText("The id you entered exists.Do you want to change it?");
+        alert.show();
     }
 }

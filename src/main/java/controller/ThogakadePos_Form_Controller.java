@@ -49,6 +49,7 @@ public class ThogakadePos_Form_Controller implements Initializable {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         if (!checkid()) customerArrayList.remove(searchindex());
+        showcustomers();
     }
 
     @FXML
@@ -66,6 +67,7 @@ public class ThogakadePos_Form_Controller implements Initializable {
                 txtcontact.getText(),
                 datedob.getValue()
         ));
+        showcustomers();
     }
 
     @Override
@@ -123,6 +125,10 @@ public class ThogakadePos_Form_Controller implements Initializable {
                 datedob.getValue()
         ));
         clearvalues();
+        showcustomers();
+    }
+
+    private void showcustomers() {
         System.out.println("------------------------------------------------------------------------");
         customerArrayList.forEach(System.out::println);
     }
